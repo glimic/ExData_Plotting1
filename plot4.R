@@ -1,0 +1,17 @@
+Sys.setlocale("LC_TIME", "C")
+data=read.table("household_power_consumption.txt", skip=397+46*24*60, nrows = 2*24*60,
+sep = ";", col.names=c("Date","Time","Global_Active_Power","Global_Reactive_Power","Voltage","GI","Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+datetime=strptime(paste(data$Date,data$Time), format="%d/%m/%Y %H:%M:%S")
+data=data.frame(datetime,data[3:9])
+
+par(mfrow=c(2,2))
+plot(datetime,data$Global_Active_Power,type="l",ylab="Global Active Power",xlab="")
+plot(datetime,data$Voltage,ylab="Voltage",type="l")
+plot(datetime,data$Sub_metering_1,type="l",ylab="Energy sub metering",xlab="")
+lines(datetime,data$Sub_metering_2,col="red")
+lines(datetime,data$Sub_metering_3,col="blue")
+legend(bty="n",cex=0.9,,x="topright",lty=c(1,1,1),col=c("black","red","blue"),legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+plot(datetime,data$Global_Reactive_Power,type="l",ylab="Global_Reactive_Power")
+axis(side=2,at=c(0.0,0.1,0.2,0.3,0.4,0.5))
+dev.copy(png,'plot4.png')
+dev.off()
